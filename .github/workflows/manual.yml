@@ -1,4 +1,6 @@
+#
 # Workflow to ensure whenever a Github push happens flake8 and pytest are run.
+#
 name: Manual Workflow
 
 on: [push]
