@@ -9,6 +9,7 @@ from ml.data import process_data
 from ml.model import train_model, inference, compute_model_metrics
 import joblib
 import sklearn
+from sklearn.metrics import confusion_matrix
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -42,6 +43,7 @@ X_test, y_test, _, _ = process_data(
 logging.info("Processed data.")
 
 # Train and save a model.
+# BK
 model = train_model(X_train, y_train)
 logging.info("Model trained.")
 model_dir = "../model"
@@ -49,8 +51,11 @@ joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
 logging.info("Saved model.")
 
-# BK - Make test predictions and score the model.
+# Make test predictions and score the model.
+# BK
 y_predict = inference(model, X_test)
 precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
-logging.info(f"precision: {precision: .2f}. recall: {recall: .2f}. fbeta: {fbeta: .2f}")
+logging.info(f"Model Score: precision: {precision: .4f}. recall: {recall: .4f}. fbeta: {fbeta: .4f}")
+c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
+logging.info(f"Confusion Matrix: {c_matrix}")
 
