@@ -47,7 +47,6 @@ logging.info("Model trained.")
 model_dir = "../model"
 joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
-joblib.dump(lb, f'{model_dir}/lb.pkl')
 logging.info("Saved model.")
 
 # BK - Make test predictions and score the model.
