@@ -18,7 +18,7 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
 
-    pass
+    return True
 
 
 def compute_model_metrics(y, preds):
