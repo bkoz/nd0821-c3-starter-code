@@ -27,4 +27,8 @@ df.drop_duplicates()
 
 ##### Data Processing
 
+##### Unit testing
+```
+pytest --log-file=logs.txt --log-level=INFO
+```
 

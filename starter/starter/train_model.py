@@ -14,8 +14,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Add code to load in the data.
-# BK
-data = pd.read_csv('../data/census.csv') 
+# BK - Remove spaces and duplicate rows.
+data = pd.read_csv('../data/census-raw.csv')
+data.columns = data.columns.str.replace(' ', '')
+data = data.drop_duplicates()
 
 # Optional enhancement, use K-fold cross validation instead of a train-test split.
 train, test = train_test_split(data, test_size=0.20)
