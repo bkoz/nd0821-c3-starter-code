@@ -8,7 +8,6 @@ import pandas as pd
 from ml.data import process_data
 from ml.model import train_model, inference, compute_model_metrics
 import joblib
-import sklearn
 from sklearn.metrics import confusion_matrix
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +18,8 @@ data = pd.read_csv('../data/census-raw.csv')
 data.columns = data.columns.str.replace(' ', '')
 data = data.drop_duplicates()
 
-# Optional enhancement, use K-fold cross validation instead of a train-test split.
+# Optional enhancement, use K-fold cross validation
+# instead of a train-test split.
 train, test = train_test_split(data, test_size=0.20)
 
 cat_features = [
@@ -57,7 +57,7 @@ logging.info("Saved model.")
 # BK
 y_predict = inference(model, X_test)
 precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
-logging.info(f"Model Score: precision: {precision: .4f}. recall: {recall: .4f}. fbeta: {fbeta: .4f}")
+logging.info(f"Model Score: precision: {precision: .4f}.\
+  recall: {recall: .4f}. fbeta: {fbeta: .4f}")
 c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
 logging.info(f"Confusion Matrix: {c_matrix}")
-
