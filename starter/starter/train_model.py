@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Add code to load in the data.
 # BK - Remove spaces and duplicate rows.
-data = pd.read_csv('../data/census-raw.csv')
+data = pd.read_csv('starter/data/census-raw.csv')
 data.columns = data.columns.str.replace(' ', '')
 data = data.drop_duplicates()
 
@@ -48,7 +48,7 @@ logging.info("Processed data.")
 # BK
 model = train_model(X_train, y_train)
 logging.info("Model trained.")
-model_dir = "../model"
+model_dir = "starter/model"
 joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
 logging.info("Saved model.")
