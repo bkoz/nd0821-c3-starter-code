@@ -28,30 +28,32 @@ def slice_performance(model, local_df, f):
     preds : dict
         Performance metrics based on slices.
     """
+    precision = []
+    recall = []
+    fbeta = []
 
-    categories = [
-                    "workclass",
-                    "education",
-                    "marital-status",
-                    "occupation",
-                    "relationship",
-                    "race",
-                    "sex",
-                    "native-country"
-                ]
-
-    # Create a test set sliced by holding a feature constant.
-    # local_df = local_df[local_df.sex == "Female"]
-    sliced_df = pd.DataFrame(local_df[local_df.sex == "Female"])
-    logging.info(f"feature: {f}")
-    logging.info(f"sliced_df: {sliced_df.head()}")
-    X_sliced, y_sliced, _, _ = process_data(
-                                        local_df, categorical_features=categories, 
-                                        label="salary", training=False,
-                                        encoder=encoder, lb=lb
-                                        )
-    y_predict = inference(model, X_sliced)
-    precision, recall, fbeta = compute_model_metrics(y_sliced, y_predict)
+    # Move the slices dict and for loop out to main
+    slices = {
+                'sex' : 'Male',
+                'race' : 'Black',
+                'workclass' : 'Private',
+                'education' : 'Bachelors'
+                }
+    for feature, value in slices.items():
+        query = f'{feature} == "{value}"'
+        df_copy = local_df.copy()
+        df_copy = df_copy.query(query)
+        logging.info(f'slice: {query}: count(): {df_copy[feature].count()}')
+        
+        X_test, y_test, _, _ = process_data(
+            df_copy, categorical_features=cat_features, label="salary", training=False,
+            encoder=encoder, lb=lb
+        )
+        y_predict = inference(model, X_test)
+        precision_local, recall_local, fbeta_local = compute_model_metrics(y_test, y_predict)
+        precision.append(precision_local)
+        recall.append(recall_local)
+        fbeta.append(fbeta_local)
     return precision, recall, fbeta
 
 # Add code to load in the data.
@@ -111,29 +113,15 @@ c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
 logging.info(f"Confusion Matrix: {c_matrix}")
 
 # Slice performance
-# BK - Make this a function.
-slices = {
-            'sex' : 'Male',
-            'race' : 'Black',
-            'workclass' : 'Private',
-            'education' : 'Bachelors'
-            }
-for feature, value in slices.items():
-    query = f'{feature} == "{value}"'
-    df_copy = test.copy()
-    df_copy = df_copy.query(query)
-    logging.info(f'slice: {query}: count(): {df_copy[feature].count()}')
+# BK - Loop through the slices here 
     
-    X_test, y_test, _, _ = process_data(
-        df_copy, categorical_features=cat_features, label="salary", training=False,
-        encoder=encoder, lb=lb
-    )
-    y_predict = inference(model, X_test)
-    precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
-    
-    # precision, recall, fbeta = slice_performance(model, test, feature)
-    logging.info(f"Sliced Scoring: precision: {precision: .4f}.\
-    recall: {recall: .4f}. fbeta: {fbeta: .4f}")
-    c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
-    logging.info(f"Confusion Matrix:")
-    logging.info(f"{c_matrix}")
+precision, recall, fbeta = slice_performance(model, test, feature)
+for p, r, f in zip(precision, recall, fbeta):
+    logging.info(f"Sliced Scoring: precision: {p}, \
+                 recall: {r}, fbeta: {f}"
+                 )
+    # logging.info(f"Sliced Scoring: precision: {p}.\
+    # recall: {recall: .4f}. fbeta: {fbeta: .4f}")
+    # c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
+    # logging.info(f"Confusion Matrix:")
+    # logging.info(f"{c_matrix}")
