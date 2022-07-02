@@ -12,15 +12,53 @@ from sklearn.metrics import confusion_matrix
 import logging
 logging.basicConfig(level=logging.INFO)
 
+def slice_performance(model, local_df, f):
+    """ Output the model performance on slices of just the categorical features.
+
+    Inputs
+    ------
+    model : ???
+        Trained machine learning model.
+    X : np.array
+        Data used for prediction.
+    feature (dict): The feature:value to hold constant (["sex" : "female"]).
+
+    Returns
+    -------
+    preds : dict
+        Performance metrics based on slices.
+    """
+
+    categories = [
+                    "workclass",
+                    "education",
+                    "marital-status",
+                    "occupation",
+                    "relationship",
+                    "race",
+                    "sex",
+                    "native-country"
+                ]
+
+    # Create a test set sliced by holding a feature constant.
+    # local_df = local_df[local_df.sex == "Female"]
+    sliced_df = pd.DataFrame(local_df[local_df.sex == "Female"])
+    logging.info(f"feature: {f}")
+    logging.info(f"sliced_df: {sliced_df.head()}")
+    X_sliced, y_sliced, _, _ = process_data(
+                                        local_df, categorical_features=categories, 
+                                        label="salary", training=False,
+                                        encoder=encoder, lb=lb
+                                        )
+    y_predict = inference(model, X_sliced)
+    precision, recall, fbeta = compute_model_metrics(y_sliced, y_predict)
+    return precision, recall, fbeta
+
 # Add code to load in the data.
 # BK - Remove spaces and duplicate rows.
 data = pd.read_csv('starter/data/census-raw.csv')
 data.columns = data.columns.str.replace(' ', '')
 data = data.drop_duplicates()
-
-# Optional enhancement, use K-fold cross validation
-# instead of a train-test split.
-train, test = train_test_split(data, test_size=0.20)
 
 cat_features = [
     "workclass",
@@ -32,6 +70,15 @@ cat_features = [
     "sex",
     "native-country",
 ]
+
+# Strip white space
+for feature in cat_features:
+    data[feature] = data[feature].str.strip()
+
+# Optional enhancement, use K-fold cross validation
+# instead of a train-test split.
+train, test = train_test_split(data, test_size=0.20)
+
 X_train, y_train, encoder, lb = process_data(
     train, categorical_features=cat_features, label="salary", training=True
 )
@@ -57,7 +104,36 @@ logging.info("Saved model.")
 # BK
 y_predict = inference(model, X_test)
 precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
+logging.info(f'count(): {test.age.count()}')
 logging.info(f"Model Score: precision: {precision: .4f}.\
   recall: {recall: .4f}. fbeta: {fbeta: .4f}")
 c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
 logging.info(f"Confusion Matrix: {c_matrix}")
+
+# Slice performance
+# BK - Make this a function.
+slices = {
+            'sex' : 'Male',
+            'race' : 'Black',
+            'workclass' : 'Private',
+            'education' : 'Bachelors'
+            }
+for feature, value in slices.items():
+    query = f'{feature} == "{value}"'
+    df_copy = test.copy()
+    df_copy = df_copy.query(query)
+    logging.info(f'slice: {query}: count(): {df_copy[feature].count()}')
+    
+    X_test, y_test, _, _ = process_data(
+        df_copy, categorical_features=cat_features, label="salary", training=False,
+        encoder=encoder, lb=lb
+    )
+    y_predict = inference(model, X_test)
+    precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
+    
+    # precision, recall, fbeta = slice_performance(model, test, feature)
+    logging.info(f"Sliced Scoring: precision: {precision: .4f}.\
+    recall: {recall: .4f}. fbeta: {fbeta: .4f}")
+    c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
+    logging.info(f"Confusion Matrix:")
+    logging.info(f"{c_matrix}")
