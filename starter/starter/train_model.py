@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix
 import logging
 logging.basicConfig(level=logging.INFO)
 
-def slice_performance(model, local_df, f):
+def slice_performance(model, local_df, slice):
     """ Output the model performance on slices of just the categorical features.
 
     Inputs
@@ -28,32 +28,20 @@ def slice_performance(model, local_df, f):
     preds : dict
         Performance metrics based on slices.
     """
-    precision = []
-    recall = []
-    fbeta = []
 
-    # Move the slices dict and for loop out to main
-    slices = {
-                'sex' : 'Male',
-                'race' : 'Black',
-                'workclass' : 'Private',
-                'education' : 'Bachelors'
-                }
-    for feature, value in slices.items():
-        query = f'{feature} == "{value}"'
-        df_copy = local_df.copy()
-        df_copy = df_copy.query(query)
-        logging.info(f'slice: {query}: count(): {df_copy[feature].count()}')
-        
-        X_test, y_test, _, _ = process_data(
-            df_copy, categorical_features=cat_features, label="salary", training=False,
-            encoder=encoder, lb=lb
-        )
-        y_predict = inference(model, X_test)
-        precision_local, recall_local, fbeta_local = compute_model_metrics(y_test, y_predict)
-        precision.append(precision_local)
-        recall.append(recall_local)
-        fbeta.append(fbeta_local)
+    feature = slice[0]
+    value = slice[1]
+    query = f'{feature} == "{value}"'
+    df_copy = local_df.copy()
+    df_copy = df_copy.query(query)
+    logging.debug(f'slice: {query}: count(): {df_copy[feature].count()}')
+    
+    X_test, y_test, _, _ = process_data(
+        df_copy, categorical_features=cat_features, label="salary", training=False,
+        encoder=encoder, lb=lb
+    )
+    y_predict = inference(model, X_test)
+    precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
     return precision, recall, fbeta
 
 # Add code to load in the data.
@@ -102,26 +90,32 @@ joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
 logging.info("Saved model.")
 
+#
 # Make test predictions and score the model.
 # BK
 y_predict = inference(model, X_test)
 precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
 logging.info(f'count(): {test.age.count()}')
-logging.info(f"Model Score: precision: {precision: .4f}.\
-  recall: {recall: .4f}. fbeta: {fbeta: .4f}")
+logging.info(f"Model Score: precision: {precision: .3f}.\
+  recall: {recall: .3f}. fbeta: {fbeta: .3f}")
 c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
 logging.info(f"Confusion Matrix: {c_matrix}")
 
+#
 # Slice performance
-# BK - Loop through the slices here 
-    
-precision, recall, fbeta = slice_performance(model, test, feature)
-for p, r, f in zip(precision, recall, fbeta):
-    logging.info(f"Sliced Scoring: precision: {p}, \
-                 recall: {r}, fbeta: {f}"
-                 )
-    # logging.info(f"Sliced Scoring: precision: {p}.\
-    # recall: {recall: .4f}. fbeta: {fbeta: .4f}")
-    # c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
-    # logging.info(f"Confusion Matrix:")
-    # logging.info(f"{c_matrix}")
+# BK 
+slices = {
+            'sex' : 'Male',
+            'race' : 'Black',
+            'workclass' : 'Private',
+            'education' : 'Bachelors'
+            }
+for slice in slices.items():
+    logging.debug(f"slice: {slice}")
+    precision, recall, fbeta = slice_performance(model, test, slice)
+    logging.info(
+                 f"Slice {slice}, "
+                 f"precision: {precision:.3f}, "
+                 f"recall: {recall:.3f}, "
+                 f"fbeta: {fbeta:.3f}"
+                )
