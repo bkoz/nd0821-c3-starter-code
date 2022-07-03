@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix
 import logging
 logging.basicConfig(level=logging.INFO)
 
+
 def slice_performance(model, local_df, slice):
     """ Output the model performance on slices of just the categorical features.
 
@@ -35,14 +36,16 @@ def slice_performance(model, local_df, slice):
     df_copy = local_df.copy()
     df_copy = df_copy.query(query)
     logging.debug(f'slice: {query}: count(): {df_copy[feature].count()}')
-    
+
     X_test, y_test, _, _ = process_data(
-        df_copy, categorical_features=cat_features, label="salary", training=False,
+        df_copy, categorical_features=cat_features,
+        label="salary", training=False,
         encoder=encoder, lb=lb
     )
     y_predict = inference(model, X_test)
     precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
     return precision, recall, fbeta
+
 
 # Add code to load in the data.
 # BK - Remove spaces and duplicate rows.
@@ -103,12 +106,12 @@ logging.info(f"Confusion Matrix: {c_matrix}")
 
 #
 # Slice performance
-# BK 
+# BK
 slices = {
-            'sex' : 'Male',
-            'race' : 'Black',
-            'workclass' : 'Private',
-            'education' : 'Bachelors'
+            'sex': 'Male',
+            'race': 'Black',
+            'workclass': 'Private',
+            'education': 'Bachelors'
             }
 for slice in slices.items():
     logging.debug(f"slice: {slice}")
