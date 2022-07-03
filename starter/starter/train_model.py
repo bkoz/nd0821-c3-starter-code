@@ -14,20 +14,22 @@ logging.basicConfig(level=logging.INFO)
 
 
 def slice_performance(model, local_df, slice):
-    """ Output the model performance on slices of just the categorical features.
+    """
+    Output the model performance on slices
+    of just the categorical features.
 
     Inputs
     ------
-    model : ???
+    model : scikitlearn RFC
         Trained machine learning model.
-    X : np.array
+    local_df : pd.DataFrame
         Data used for prediction.
-    feature (dict): The feature:value to hold constant (["sex" : "female"]).
+    slice (tuple): The feature:value to hold constant (i.e. "sex": "female").
 
     Returns
     -------
-    preds : dict
-        Performance metrics based on slices.
+    score: float
+        precision, recall, fbeta (Performance metrics based on slices)
     """
 
     feature = slice[0]
