@@ -28,8 +28,8 @@ def slice_performance(model, local_df, slice):
 
     Returns
     -------
-    score: float
-        precision, recall, fbeta (Performance metrics based on slices)
+    score: float, float, float, ndarray
+        precision, recall, fbeta, confusion_matrix (Performance metrics based on slices)
     """
 
     feature = slice[0]
@@ -46,7 +46,10 @@ def slice_performance(model, local_df, slice):
     )
     y_predict = inference(model, X_test)
     precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
-    return precision, recall, fbeta
+
+    c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
+
+    return precision, recall, fbeta, c_matrix
 
 
 # Add code to load in the data.
@@ -111,16 +114,17 @@ logging.info(f"Confusion Matrix: {c_matrix}")
 # BK
 slices = {
             'sex': 'Male',
-            'race': 'Black',
+            'race': 'White',
             'workclass': 'Private',
             'education': 'Bachelors'
             }
 for slice in slices.items():
     logging.debug(f"slice: {slice}")
-    precision, recall, fbeta = slice_performance(model, test, slice)
+    precision, recall, fbeta, c_matrix = slice_performance(model, test, slice)
     logging.info(
                  f"Slice {slice}, "
                  f"precision: {precision:.3f}, "
                  f"recall: {recall:.3f}, "
                  f"fbeta: {fbeta:.3f}"
                 )
+    logging.info(f"Confusion Matrix: {c_matrix}")

@@ -14,16 +14,19 @@
 - Predict whether salary exceeds $50K/yr.
 
 ## Training Data
-- % of split
+- 80 % of split
 
 ## Evaluation Data
-- % of split
+- 20% of split
 
 ## Metrics
-Make a table here.
-```
-precision:  1.000.  recall:  0.010. fbeta:  0.020
-```
+
+### Model Performance
+
+|Slice |Precision  |Recall |FBeta
+|--- | --- | ---| ---|
+|All|1.0|0.01|0.02
+
 Confusion Matrix
 ```
 [
@@ -32,14 +35,47 @@ Confusion Matrix
 ]
  ```
 
- Performance of categorical slices.
- ```
-('sex', 'Male'), precision: 1.000, recall: 0.012, fbeta: 0.023
-('race', 'Black'), precision: 1.000, recall: 0.000, fbeta: 0.000
-('workclass', 'Private'), precision: 1.000, recall: 0.007, fbeta: 0.014
-('education', 'Bachelors'), precision: 1.000, recall: 0.010, fbeta: 0.020
+ #### Model performance of categorical slices.
+
+|Slice |Precision  |Recall |FBeta
+|--- | --- | ---| ---|
+|sex = Male|1.0|0.012|0.023
+|race = White|1.0|0.004|0.007
+|workclass = Private|1.0|0.007|0.014
+|education = Bachelors|1.0|0.010|0.020
+
 ```
 
+Confusion Matricies
+
+Slice ('sex', 'Male')
+
+[
+    [2946    0]
+    [1331    0]
+ ]
+
+Slice ('race', 'White')
+
+[
+    [4177    0]
+    [1458    0]
+]
+
+Slice ('workclass', 'Private')
+
+[
+    [3527    0]
+    [1038    0]
+]
+
+Slice ('education', 'Bachelors')
+
+[
+    [607   0]
+    [467   0]
+]
+ ```
 
 ## Ethical Considerations
 
