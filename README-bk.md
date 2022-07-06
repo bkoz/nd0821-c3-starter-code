@@ -32,3 +32,7 @@ df.drop_duplicates()
 pytest --log-file=logs.txt --log-level=INFO
 ```
 
+###### FastAPI
+```
+https://frank-ceballos.medium.com/deploying-your-first-fastapi-application-in-openshift-857cee7277f9
+```
