@@ -33,6 +33,12 @@ pytest --log-file=logs.txt --log-level=INFO
 ```
 
 ###### FastAPI
+
+How to launch from the top-level directory.
+```
+uvicorn starter.main:app --reload
+```
+
 ```
 https://frank-ceballos.medium.com/deploying-your-first-fastapi-application-in-openshift-857cee7277f9
 ```
