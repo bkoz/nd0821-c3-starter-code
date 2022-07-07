@@ -30,7 +30,8 @@ def slice_performance(model, local_df, slice):
     Returns
     -------
     score: float, float, float, ndarray
-        precision, recall, fbeta, confusion_matrix (Performance metrics based on slices)
+        precision, recall, fbeta, confusion_matrix (Performance metrics
+        based on slices)
     """
 
     feature = slice[0]
@@ -50,7 +51,7 @@ def slice_performance(model, local_df, slice):
 
     c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
     disp = ConfusionMatrixDisplay(confusion_matrix=c_matrix,
-                                display_labels = [0, 1])
+                                  display_labels=[0, 1])
     disp.plot()
     disp.figure_.savefig(f'starter/screenshots/{feature}_{value}_c_matrix.png')
 
@@ -114,7 +115,7 @@ logging.info(f"Model Score: precision: {precision: .3f}.\
 c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])
 logging.info(f"Confusion Matrix: {c_matrix}")
 disp = ConfusionMatrixDisplay(confusion_matrix=c_matrix,
-                              display_labels = [0, 1])
+                              display_labels=[0, 1])
 disp.plot()
 disp.figure_.savefig('starter/screenshots/c_matrix.png')
 

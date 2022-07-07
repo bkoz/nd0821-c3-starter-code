@@ -8,12 +8,15 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+
 client = TestClient(app)
+
 
 def test_get():
     r = client.get("/")
     logging.info(r)
     assert r.json() == {'greeting': 'Welcome to the census ML model server.'}
+
 
 def test_post():
     data = json.dumps({"value": 10})

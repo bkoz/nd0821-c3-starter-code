@@ -10,14 +10,17 @@ app = FastAPI()
 class Value(BaseModel):
     value: int
 
+
 logging.basicConfig(level=logging.INFO)
 logging.info("model_server: API is up.")
+
 
 # Define a GET on the specified endpoint.
 @app.get("/")
 async def welcome():
     logging.info("model_server: get()")
     return {"greeting": "Welcome to the census ML model server."}
+
 
 @app.post("/{path}")
 async def predict(path: int, query: int, body: Value):
