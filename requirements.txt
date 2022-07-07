@@ -6,3 +6,4 @@ sklearn
 pandas
 fastapi
 matplotlib
+requests
