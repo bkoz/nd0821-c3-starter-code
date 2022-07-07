@@ -1,8 +1,6 @@
 # test_main.py
-
 import json
 from fastapi.testclient import TestClient
-
 from main import app
 import logging
 
@@ -19,9 +17,12 @@ def test_get():
 
 
 def test_post():
-    data = json.dumps({"value": 10})
-    r = client.post("/42?query=5", data=data)
-    print(r.json())
-    assert r.json()["path"] == 42
-    assert r.json()["query"] == 5
-    assert r.json()["body"] == {"value": 10}
+    logging.info("test: Loading payload.")
+    payload_file = 'starter/data/payload.json'
+    f = open(payload_file)
+    payload_data = json.load(f)
+    logging.info(f"test: Loaded payload data = {payload_data}.")
+    response = client.post("/predict/", data=json.dumps(payload_data))
+    logging.info(f"test: Prediction: {response.json()}")
+    print(f"test: Prediction: {response.json()}")
+    assert 200, response.status_code == 200

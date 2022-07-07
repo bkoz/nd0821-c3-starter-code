@@ -13,6 +13,11 @@
 ## Intended Use
 - Predict whether salary exceeds $50K/yr.
 
+## Data
+- 15 features (numeric and categorical)
+- 32561 rows
+- Data is one-hot encoded into 108 features.
+
 ## Training Data
 - 80 % of split
 

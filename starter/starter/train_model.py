@@ -1,5 +1,6 @@
 # Script to train machine learning model.
 
+import numpy
 from sklearn.model_selection import train_test_split
 
 # Add the necessary imports for the starter code.
@@ -8,6 +9,7 @@ import pandas as pd
 from ml.data import process_data
 from ml.model import train_model, inference, compute_model_metrics
 import joblib
+import json
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
 import logging
@@ -103,6 +105,33 @@ model_dir = "starter/model"
 joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
 logging.info("Saved model.")
+
+#
+# Load the saved model and use it to make predictions.
+# BK
+del(model)
+model = joblib.load(f'{model_dir}/model.pkl')
+logging.info("Loaded saved model.")
+
+#
+# Save a sample payload for API testing.
+#
+json_data_file = "starter/data/payload.json"
+with open(json_data_file, "w") as outfile:
+    json.dump(X_test[0].tolist(), outfile, indent=2)
+
+#
+# Test a single request.
+#
+# req = X_test[0].reshape(1, -1)
+f = open(json_data_file)
+a = json.load(f)
+req = numpy.asarray(a)
+req = req.reshape(1, -1)
+# y_predict = inference(model, req)
+y_predict = model.predict(req)
+logging.info(f"single_request: {type(req)}")
+logging.info(f"y_predict: {y_predict}")
 
 #
 # Make test predictions and score the model.
