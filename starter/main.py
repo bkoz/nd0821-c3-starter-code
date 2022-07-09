@@ -22,7 +22,10 @@ class TaggedItem(BaseModel):
 
 
 class CensusRequest(BaseModel):
-    age: int = 1
+    """
+    Define the Census request schema.
+    """
+    age: int = Field(default=1, gt=0)
     workclass: str
     fnlgt: int
     education: str
@@ -34,9 +37,10 @@ class CensusRequest(BaseModel):
     sex: str
     capital_gain: int = Field(None, alias='capital-gain')
     capital_loss: int = Field(None, alias='capital-loss')
-    hours_per_week: int = Field(40, alias='hours-per-week')
+    hours_per_week: int = Field(default=40, alias='hours-per-week')
     native_country: str = Field(None, alias='native-country')
     salary: str
+
 
 logging.info(f"CensusRequest = {CensusRequest.schema_json(indent=2)}")
 
@@ -73,9 +77,9 @@ async def predict2(body: List[List[int]]) -> str:
     # return "PREDICT"
     return json.dumps(r.tolist())
 
+
 @app.post("/predict3/")
 async def predict3(body: CensusRequest) -> dict:
     logging.info(f"model_server: body = {body}")
     # r = model.predict(body)
     return "PREDICT3"
-
