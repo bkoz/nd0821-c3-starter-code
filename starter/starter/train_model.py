@@ -1,6 +1,4 @@
 # Script to train machine learning model.
-
-import numpy
 from sklearn.model_selection import train_test_split
 
 # Add the necessary imports for the starter code.
@@ -9,7 +7,6 @@ import pandas as pd
 from ml.data import process_data
 from ml.model import train_model, inference, compute_model_metrics
 import joblib
-import json
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
 import logging
@@ -104,7 +101,8 @@ logging.info("Model trained.")
 model_dir = "starter/model"
 joblib.dump(model, f'{model_dir}/model.pkl')
 joblib.dump(encoder, f'{model_dir}/encoder.pkl')
-logging.info("Saved model.")
+joblib.dump(lb, f'{model_dir}/lb.pkl')
+logging.info("Saved model, encoder and lb.")
 
 #
 # Load the saved model and use it to make predictions.
@@ -114,31 +112,32 @@ model = joblib.load(f'{model_dir}/model.pkl')
 logging.info("Loaded saved model.")
 
 #
-# Save a sample payload for API testing.
-#
-json_data_file = "starter/data/payload.json"
-with open(json_data_file, "w") as outfile:
-    json.dump(X_test[0].tolist(), outfile, indent=2)
-
-#
-# Test a single request.
-#
-# req = X_test[0].reshape(1, -1)
-f = open(json_data_file)
-a = json.load(f)
-req = numpy.asarray(a)
-req = req.reshape(1, -1)
-# y_predict = inference(model, req)
-y_predict = model.predict(req)
-logging.info(f"single_request: {type(req)}")
-logging.info(f"y_predict: {y_predict}")
+# Optional code to test requests and log results where
+# the y_labeled = y_predicted (TPs). A bit sloppy.
+# BK
+idx = 0
+for r in X_test:
+    req = []
+    req.append(r)
+    y_predict = model.predict(req)
+    if y_predict == 1:
+        logging.debug(f"X_test index = {idx}, y_predict: {y_predict}")
+        v = test.iloc[idx].tolist()
+        logging.debug(f"test = {v}")
+        logging.debug(data.columns)
+        ki = 0
+        d = {}
+        for k in data.columns:
+            d[k] = v[ki]
+            logging.debug(f"Request: {d}")
+            ki = ki + 1
+    idx = idx + 1
 
 #
 # Make test predictions and score the model.
 # BK
 y_predict = inference(model, X_test)
 precision, recall, fbeta = compute_model_metrics(y_test, y_predict)
-logging.info(f'count(): {test.age.count()}')
 logging.info(f"Model Score: precision: {precision: .3f}.\
   recall: {recall: .3f}. fbeta: {fbeta: .3f}")
 c_matrix = confusion_matrix(y_test, y_predict, labels=[0, 1])

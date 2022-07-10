@@ -1,5 +1,6 @@
 # Put the code for your API here.
 # BK
+import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
 from pydantic import Field
@@ -7,6 +8,7 @@ from typing import Union, List
 import joblib
 import json
 import numpy
+from starter.starter.ml.data import process_data
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -46,6 +48,8 @@ logging.info(f"CensusRequest = {CensusRequest.schema_json(indent=2)}")
 
 model_file = 'starter/model/model.pkl'
 model = joblib.load(model_file)
+encoder = joblib.load("starter/model/encoder.pkl")
+lb = joblib.load("starter/model/lb.pkl")
 
 
 # Define a GET on the specified endpoint.
@@ -79,7 +83,40 @@ async def predict2(body: List[List[int]]) -> str:
 
 
 @app.post("/predict3/")
-async def predict3(body: CensusRequest) -> dict:
+async def predict3(body: CensusRequest) -> int:
+    global model
+    global encoder
+    global lb
+    columns = []
+    row = []
+    for feature, val in body._iter():
+        columns.append(feature)
+        row.append(val)
+
+    data = []
+    data.append(row)
+    df_copy = pd.DataFrame(data, columns=columns)
     logging.info(f"model_server: body = {body}")
-    # r = model.predict(body)
-    return "PREDICT3"
+    logging.info(f"model_server: columns = {columns}")
+    logging.info(f"model_server: data = {data}")
+
+    cat_features = [
+                    "workclass",
+                    "education",
+                    "marital_status",
+                    "occupation",
+                    "relationship",
+                    "race",
+                    "sex",
+                    "native_country",
+                    ]
+
+    X_test, y_test, _, _ = process_data(
+        df_copy, categorical_features=cat_features,
+        label="salary", training=False,
+        encoder=encoder, lb=lb
+    )
+    logging.info(f"model_server: X_test = {X_test}")
+    r = model.predict(X_test)
+    logging.info(f"model_server: prediction = {type(r)} = {r.tolist()}")
+    return {"Prediction": r.tolist()}

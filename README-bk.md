@@ -57,11 +57,73 @@ INFO:     Application startup complete.
 
 Testing
 ```
-curl -v -X 'POST' 'http://127.0.0.1:8000/predict' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{
-[60,325971,9,7688,0,40,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0]
+age                               35
+workclass                    Private
+fnlgt                         185556
+education                    Masters
+education-num                     14
+marital-status    Married-civ-spouse
+occupation            Prof-specialty
+relationship                 Husband
+race                           White
+sex                             Male
+capital-gain                       0
+capital-loss                    1887
+hours-per-week                    40
+native-country         United-States
+salary                          >50K
+
+curl -X 'POST' \
+  'http://localhost:8000/predict3/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "age": 35,
+  "workclass": "Private",
+  "fnlgt": 185556,
+  "education": "Masters",
+  "education-num": 14,
+  "marital-status": "Married-civ-spouse",
+  "occupation": "Prof-speciality",
+  "relationship": "Husband",
+  "race": "White",
+  "sex": "Male",
+  "capital-gain": 0,
+  "capital-loss": 1887,
+  "hours-per-week": 40,
+  "native-country": "United-States",
+  "salary": ">50K"
 }'
 ```
-
+```
+{"Prediction":[1]}
+```
+```
+curl -X 'POST' \
+  'http://localhost:8000/predict3/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "age": 46,
+  "workclass": "Adm-clerical",
+  "fnlgt": 18556,
+  "education": "HS-grad",
+  "education-num": 10,
+  "marital-status": "Married-civ-spouse",
+  "occupation": "Prof-speciality",
+  "relationship": "Husband",
+  "race": "Black",
+  "sex": "Male",
+  "capital-gain": 0,
+  "capital-loss": 110,
+  "hours-per-week": 20,
+  "native-country": "United-States",
+  "salary": "?"
+}'
+```
+```
+{"Prediction":[0]}
+```
 ```
 https://frank-ceballos.medium.com/deploying-your-first-fastapi-application-in-openshift-857cee7277f9
 ```
