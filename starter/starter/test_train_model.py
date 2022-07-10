@@ -35,4 +35,4 @@ def test_train_model() -> None:
     Unit test to check for a trained model.
     """
     assert type(t_model.model) == \
-           sklearn.ensemble._forest.RandomForestClassifier
+           sklearn.linear_model._logistic.LogisticRegression

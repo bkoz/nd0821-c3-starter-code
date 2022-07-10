@@ -20,8 +20,7 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
     # BK
-    # clf = RandomForestClassifier(max_depth=2, random_state=0)
-    clf = LogisticRegression()
+    clf = LogisticRegression(max_iter=10000)
     clf.fit(X_train, y_train)
     return clf
 
