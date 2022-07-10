@@ -151,10 +151,8 @@ disp.figure_.savefig('starter/screenshots/c_matrix.png')
 # Slice performance
 # BK
 slices = {
-            'sex': 'Male',
-            'race': 'White',
-            'workclass': 'Private',
-            'education': 'Bachelors'
+            'education': 'Bachelors',
+            'education': 'Masters'
             }
 for slice in slices.items():
     logging.debug(f"slice: {slice}")
