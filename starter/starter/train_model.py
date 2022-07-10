@@ -33,8 +33,8 @@ def slice_performance(model, local_df, slice):
         based on slices)
     """
 
-    feature = slice[0]
-    value = slice[1]
+    feature = list(slice.keys())[0]
+    value = list(slice.values())[0]
     query = f'{feature} == "{value}"'
     df_copy = local_df.copy()
     df_copy = df_copy.query(query)
@@ -150,12 +150,16 @@ disp.figure_.savefig('starter/screenshots/c_matrix.png')
 #
 # Slice performance
 # BK
-slices = {
-            'education': 'Bachelors',
-            'education': 'Masters'
-            }
-for slice in slices.items():
-    logging.debug(f"slice: {slice}")
+# Try: df['education'].unique()
+#
+slices = [
+          {'education': 'Bachelors'},
+          {'education': 'Masters'},
+          {'education': 'HS-grad'},
+          {'education': 'Doctorate'}
+         ]
+for slice in slices:
+    logging.info(f"slice: {slice}")
     precision, recall, fbeta, c_matrix = slice_performance(model, test, slice)
     logging.info(
                  f"Slice {slice}, "
