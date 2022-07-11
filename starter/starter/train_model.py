@@ -9,6 +9,7 @@ from ml.model import train_model, inference, compute_model_metrics
 import joblib
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -52,6 +53,7 @@ def slice_performance(model, local_df, slice):
     disp = ConfusionMatrixDisplay(confusion_matrix=c_matrix,
                                   display_labels=[0, 1])
     disp.plot()
+    plt.title(f"Slice: {feature} = {value}")
     disp.figure_.savefig(f'starter/screenshots/{feature}_{value}_c_matrix.png')
 
     return precision, recall, fbeta, c_matrix
@@ -145,6 +147,7 @@ logging.info(f"Confusion Matrix: {c_matrix}")
 disp = ConfusionMatrixDisplay(confusion_matrix=c_matrix,
                               display_labels=[0, 1])
 disp.plot()
+plt.title("Confusion Matrix")
 disp.figure_.savefig('starter/screenshots/c_matrix.png')
 
 #
