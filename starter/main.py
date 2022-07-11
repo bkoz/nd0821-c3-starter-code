@@ -64,6 +64,7 @@ async def predict(body: CensusRequest) -> int:
 
     Returns:
                  0 if salary is <= $50K
+
                  1 if salary is > $50K
     """
     global model
