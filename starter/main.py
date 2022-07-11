@@ -57,8 +57,10 @@ async def predict(body: CensusRequest) -> int:
     """
     Description: Converts the REST request body to a pandas DF,
                  preprocesses the data and makes a prediction.
+
     Args:
                  body: The request body.
+                 
     Returns:
                  0 if salary is <= $50K
                  1 if salary is > $50K
