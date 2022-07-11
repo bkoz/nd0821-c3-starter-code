@@ -31,7 +31,8 @@ class CensusRequest(BaseModel):
     capital_gain: int = Field(default=0, alias='capital-gain')
     capital_loss: int = Field(default=1887, alias='capital-loss')
     hours_per_week: int = Field(default=40, alias='hours-per-week')
-    native_country: str = Field(default="United-States", alias='native-country')
+    native_country: str = Field(default="United-States",
+                                alias='native-country')
     salary: str = "?"
 
 
@@ -60,7 +61,7 @@ async def predict(body: CensusRequest) -> int:
 
     Args:
                  body: The request body.
-                 
+
     Returns:
                  0 if salary is <= $50K
                  1 if salary is > $50K
