@@ -48,7 +48,8 @@ def test_post_0():
     response = client.post("/predict/", data=json.dumps(request_0))
     assert 200, response.status_code == 200
     logging.info(f"status code = {response.status_code}")
-    logging.info(response.json())
+    assert response.json() == {'Prediction': 0}
+    logging.info(f"response = {response.json()}")
 
 
 def test_post_1():
@@ -77,4 +78,5 @@ def test_post_1():
     response = client.post("/predict/", data=json.dumps(request_1))
     assert 200, response.status_code == 200
     logging.info(f"status code = {response.status_code}")
-    logging.info(response.json())
+    assert response.json() == {'Prediction': 1}
+    logging.info(f"response = {response.json()}")
