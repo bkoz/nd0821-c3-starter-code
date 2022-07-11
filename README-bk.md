@@ -17,12 +17,13 @@ I used the following `vim` command to remove the spaces after a comma.
 :1,$s/, /,/g
 ```
 ```
-df.columns = df.columns.str.replace(' ', '')
-```
+data = pd.read_csv('starter/data/census-raw.csv')
+data.columns = data.columns.str.replace(' ', '')
+data = data.drop_duplicates()
 
-###### TODO: Remove duplicate rows.
-```
-df.drop_duplicates()
+# Strip white space
+for feature in cat_features:
+    data[feature] = data[feature].str.strip()
 ```
 
 ##### Data Processing
