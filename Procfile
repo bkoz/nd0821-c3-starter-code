@@ -1,1 +1,1 @@
-web uvicorn starter.main:app --host $PORT
+web uvicorn starter.main:app
