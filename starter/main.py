@@ -109,4 +109,4 @@ async def predict(body: CensusRequest) -> int:
     logging.debug(f"model_server: X_test = {X_test}")
     r = model.predict(X_test)
     logging.info(f"model_server: prediction = {type(r)} = {r.tolist()}")
-    return {"Prediction": r.tolist()}
+    return {"Prediction": r.tolist()[0]}
