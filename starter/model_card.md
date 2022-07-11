@@ -11,77 +11,37 @@
 - Feedback: bkozdemba@gmail.com
 
 ## Intended Use
-- Predict whether salary exceeds $50K/yr.
+- Predict whether salary exceeds $50K/yr given a set of numeric and categorical features.
 
 ## Data
 - 15 features (numeric and categorical)
 - 32561 rows
 - Data is one-hot encoded into 108 features.
-
-## Training Data
-- 80 % of split
-
-## Evaluation Data
-- 20% of split
+- Training/Test split was 80/20 respectively
 
 ## Metrics
 
 ### Model Performance
 
+Confusion Matrix (see `starter/screenshots/c_matrix.png`)
+
+Performance of *test* split.
+
 |Slice |Precision  |Recall |FBeta
 |--- | --- | ---| ---|
-|All|1.0|0.01|0.02
-
-Confusion Matrix
-```
-[
-    [4925    0]
-    [1567   16]
-]
- ```
+|test split|0.696|0.256|0.375|
 
  #### Model performance of categorical slices.
 
-|Slice |Precision  |Recall |FBeta
+Slices of the education category were performed for various values.
+Example *confusion matricies* can be found in the `starter/screenshots`
+directory.
+
+#### Performance of education slices:
+
+|Slice|Precision  |Recall |FBeta
 |--- | --- | ---| ---|
-|sex = Male|1.0|0.012|0.023
-|race = White|1.0|0.004|0.007
-|workclass = Private|1.0|0.007|0.014
-|education = Bachelors|1.0|0.010|0.020
-
-```
-
-Confusion Matricies
-
-Slice ('sex', 'Male')
-
-[
-    [2946    0]
-    [1331    0]
- ]
-
-Slice ('race', 'White')
-
-[
-    [4177    0]
-    [1458    0]
-]
-
-Slice ('workclass', 'Private')
-
-[
-    [3527    0]
-    [1038    0]
-]
-
-Slice ('education', 'Bachelors')
-
-[
-    [607   0]
-    [467   0]
-]
- ```
-
-## Ethical Considerations
-
-## Caveats and Recommendations
+|HS-Grad|0.592|0.217|0.318|
+|Bachelors|0.810|0.295|0.433|
+|Masters|0.877|0.284|0.429|
+|Doctorate|0.944|0.254|0.400|
