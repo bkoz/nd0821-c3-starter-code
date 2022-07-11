@@ -18,21 +18,21 @@ class CensusRequest(BaseModel):
     """
     Define the Census request schema.
     """
-    age: int = Field(default=1, gt=0)
-    workclass: str
-    fnlgt: int
-    education: str
+    age: int = Field(default=35, gt=0)
+    workclass: str = "Private"
+    fnlgt: int = 185556
+    education: str = "Masters"
     education_num: int = Field(None, alias='education-num')
     marital_status: str = Field(None, alias='marital-status')
-    occupation: str
-    relationship: str
-    race: str
-    sex: str
-    capital_gain: int = Field(None, alias='capital-gain')
-    capital_loss: int = Field(None, alias='capital-loss')
+    occupation: str = "Prof-speciality"
+    relationship: str = "Husband"
+    race: str = "White"
+    sex: str = "Male"
+    capital_gain: int = Field(default=0, alias='capital-gain')
+    capital_loss: int = Field(default=1887, alias='capital-loss')
     hours_per_week: int = Field(default=40, alias='hours-per-week')
-    native_country: str = Field(None, alias='native-country')
-    salary: str
+    native_country: str = Field(default="United-States", alias='native-country')
+    salary: str = "?"
 
 
 logging.debug(f"model_server: CensusRequest =\
