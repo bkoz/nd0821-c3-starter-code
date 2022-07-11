@@ -8,6 +8,23 @@
 - MacOS Monterey 12.4
 - Python version 3.8.13 installed [mini-conda](https://github.com/conda-forge/miniforge)
 
+### High Level File and Directory Overview
+```
+├── Procfile                         Heroku startup commands
+├── notebooks                        EDA notebooks and example output
+├── requirements.txt                 Python dependencies
+├── runtime.txt                      Changes the default Heroku python version
+├── starter
+│   ├── data                         Data and sample payloads
+│   ├── main.py                      FastAPI code
+│   ├── model                        Saved model artifacts
+│   ├── sample_heroku_requests.py    Heroku scripts for testing fastAPI
+│   ├── screenshots                  Screen captures
+│   ├── setup.py
+│   └── starter                      Python scripts to process data and build/train models
+├── test_main.py                     FastAPI unit tests
+└── test_train_model.py              Model training unit tests
+```
 ### How to test my work
 
 ```
