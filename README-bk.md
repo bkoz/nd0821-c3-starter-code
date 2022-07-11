@@ -27,13 +27,7 @@ df.drop_duplicates()
 
 ##### Data Processing
 
-Save test prediction as json.
-```
-import json
-d = X_test[0].tolist()
-with open("payload.json", "w") as outfile:
-    json.dump(d, outfile, indent=2)
-```
+It is necessary to one-hot encode the request before makeing a prediction. 
 
 ##### Unit testing
 ```
