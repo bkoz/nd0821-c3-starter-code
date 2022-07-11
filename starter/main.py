@@ -8,7 +8,7 @@ from typing import Union, List
 import joblib
 import json
 import numpy
-from starter.ml.data import process_data
+from starter.starter.ml.data import process_data
 import logging
 
 logging.basicConfig(level=logging.INFO)
