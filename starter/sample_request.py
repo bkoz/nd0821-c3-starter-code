@@ -1,30 +1,64 @@
 import requests
 import json
-import numpy
+import logging
 
-an_int = {"name": "bobs_data", "tags": "my_tags", "item_id": 33}
+logging.basicConfig(level=logging.INFO)
 
-a_value = [12, 13]
+baseurl = "https://bk-census.herokuapp.com"
 
-r = requests.get("http://127.0.0.1:8000/")
-print(r.status_code)
-print(r.json())
+logging.info("GET")
+r = requests.get(baseurl)
+logging.info(f"status code = {r.status_code}")
+logging.info(r.json())
 
-r = requests.post("http://127.0.0.1:8000/mypath/", data=json.dumps(an_int))
-print(r.status_code)
-print(r.json())
+#
+# This request should return a 0.
+#
+request_0 = {
+                "age": 21,
+                "workclass": "Private",
+                "fnlgt": 4128,
+                "education": "HS-Grad",
+                "education-num": 12,
+                "marital-status": "Single",
+                "occupation": "Prof-speciality",
+                "relationship": "Husband",
+                "race": "White",
+                "sex": "Male",
+                "capital-gain": 0,
+                "capital-loss": 17,
+                "hours-per-week": 40,
+                "native-country": "United-States",
+                "salary": ">50K"
+                }
 
-r = requests.post("http://127.0.0.1:8000/predict/", data=json.dumps(an_int))
-print(r.status_code)
-print(r.json())
+logging.info("POST")
+r = requests.post(f"{baseurl}/predict/", data=json.dumps(request_0))
+logging.info(f"status code = {r.status_code}")
+logging.info(r.json())
 
-json_data_file = "starter/data/payload.json"
-f = open(json_data_file)
-a = json.load(f)
-req = numpy.asarray(a)
-req = req.reshape(1, -1)
+#
+# This request should return a 0.
+#
+request_1 = {
+                "age": 35,
+                "workclass": "Private",
+                "fnlgt": 185556,
+                "education": "Masters",
+                "education-num": 14,
+                "marital-status": "Married-civ-spouse",
+                "occupation": "Prof-speciality",
+                "relationship": "Husband",
+                "race": "White",
+                "sex": "Male",
+                "capital-gain": 0,
+                "capital-loss": 1887,
+                "hours-per-week": 40,
+                "native-country": "United-States",
+                "salary": ">50K"
+                }
 
-r = requests.post("http://127.0.0.1:8000/predict2/",
-                  data=json.dumps(req.tolist()))
-print(r.status_code)
-print(r.json())
+logging.info("POST")
+r = requests.post(f"{baseurl}/predict/", data=json.dumps(request_1))
+logging.info(f"status code = {r.status_code}")
+logging.info(r.json())
