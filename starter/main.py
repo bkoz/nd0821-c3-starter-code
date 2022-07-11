@@ -4,23 +4,14 @@ import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
 from pydantic import Field
-from typing import Union, List
 import joblib
-import json
-import numpy
 from starter.starter.ml.data import process_data
 import logging
 
 logging.basicConfig(level=logging.INFO)
-# logging.info("model_server: API is up.")
+logging.info("model_server: is running.")
 
 app = FastAPI()
-
-
-class TaggedItem(BaseModel):
-    name: str
-    tags: Union[str, List[str]]
-    item_id: int
 
 
 class CensusRequest(BaseModel):
@@ -44,12 +35,14 @@ class CensusRequest(BaseModel):
     salary: str
 
 
-logging.info(f"CensusRequest = {CensusRequest.schema_json(indent=2)}")
+logging.debug(f"model_server: CensusRequest =\
+              {CensusRequest.schema_json(indent=2)}")
 
-model_file = 'starter/model/model.pkl'
-model = joblib.load(model_file)
-encoder = joblib.load("starter/model/encoder.pkl")
-lb = joblib.load("starter/model/lb.pkl")
+logging.info("model_server: loading model, encoder and label binarizer.")
+model_dir = 'starter/model'
+model = joblib.load(f"{model_dir}/model.pkl")
+encoder = joblib.load(f"{model_dir}/encoder.pkl")
+lb = joblib.load(f"{model_dir}/lb.pkl")
 
 
 # Define a GET on the specified endpoint.
@@ -59,34 +52,24 @@ async def welcome():
     return {"greeting": "Welcome to the census ML model server."}
 
 
-@app.post("/mypath/")
-async def exercise_function():
-    return "Hello"
-
-
 @app.post("/predict/")
-async def predict(body: TaggedItem) -> str:
-    # logging.info(f"model_server: body = {body}")
-    return body
-
-
-@app.post("/predict2/")
-async def predict2(body: List[List[int]]) -> str:
-    logging.info(f"model_server: body = {body}")
-    a = numpy.array(body)
-    logging.info(f"model_server: a = {a.reshape(1, -1)}")
-    a.reshape(1, -1)
-    r = model.predict(a)
-    logging.info(f"model_server: r = {r}")
-    # return "PREDICT"
-    return json.dumps(r.tolist())
-
-
-@app.post("/predict3/")
-async def predict3(body: CensusRequest) -> int:
+async def predict(body: CensusRequest) -> int:
+    """
+    Description: Converts the REST request body to a pandas DF,
+                 preprocesses the data and makes a prediction.
+    Args:
+                 body: The request body.
+    Returns:
+                 0 if salary is <= $50K
+                 1 if salary is > $50K
+    """
     global model
     global encoder
     global lb
+
+    #
+    # Build out the pandas dataframe from the REST body.
+    #
     columns = []
     row = []
     for feature, val in body._iter():
@@ -96,9 +79,8 @@ async def predict3(body: CensusRequest) -> int:
     data = []
     data.append(row)
     df_copy = pd.DataFrame(data, columns=columns)
-    logging.info(f"model_server: body = {body}")
-    logging.info(f"model_server: columns = {columns}")
-    logging.info(f"model_server: data = {data}")
+    logging.debug(f"model_server: body = {body}")
+    logging.debug(f"model_server: data = {data}")
 
     cat_features = [
                     "workclass",
@@ -111,12 +93,20 @@ async def predict3(body: CensusRequest) -> int:
                     "native_country",
                     ]
 
+    #
+    # Preprocessing.
+    # Build a one-hot encoded numpy array.
+    #
     X_test, y_test, _, _ = process_data(
         df_copy, categorical_features=cat_features,
         label="salary", training=False,
         encoder=encoder, lb=lb
     )
-    logging.info(f"model_server: X_test = {X_test}")
+
+    #
+    # Make a prediction.
+    #
+    logging.debug(f"model_server: X_test = {X_test}")
     r = model.predict(X_test)
     logging.info(f"model_server: prediction = {type(r)} = {r.tolist()}")
     return {"Prediction": r.tolist()}
