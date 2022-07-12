@@ -20,7 +20,6 @@
 │   ├── model                        Saved model artifacts
 │   ├── sample_heroku_requests.py    Heroku scripts for testing fastAPI
 │   ├── screenshots                  Screen captures
-│   ├── setup.py
 │   └── starter                      Python scripts to process data and build/train models
 ├── test_main.py                     FastAPI unit tests
 └── test_train_model.py              Model training unit tests
