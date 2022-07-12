@@ -1,0 +1,24 @@
+Slice {'education': 'Bachelors'}: 
+precision = 0.838, recall = 0.371, fbeta = 0.514
+Confusion Matrix =
+ [[588  33]
+ [290 171]]
+
+Slice {'education': 'Masters'}: 
+precision = 0.956, recall = 0.365, fbeta = 0.528
+Confusion Matrix =
+ [[164   3]
+ [113  65]]
+
+Slice {'education': 'HS-grad'}: 
+precision = 0.530, recall = 0.241, fbeta = 0.331
+Confusion Matrix =
+ [[1623   70]
+ [ 249   79]]
+
+Slice {'education': 'Doctorate'}: 
+precision = 1.000, recall = 0.441, fbeta = 0.612
+Confusion Matrix =
+ [[19  0]
+ [33 26]]
+
