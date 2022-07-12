@@ -164,7 +164,7 @@ slices = [
 #
 # Create output.txt file for slice performance results.
 #
-slice_perf_filename = "output.txt"
+slice_perf_filename = "slice_output.txt"
 file_handle = open(slice_perf_filename, 'w')
 
 for slice in slices:
