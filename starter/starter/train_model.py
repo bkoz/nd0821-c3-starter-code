@@ -161,9 +161,18 @@ slices = [
           {'education': 'HS-grad'},
           {'education': 'Doctorate'}
          ]
+#
+# Create output.txt file for slice performance results.
+#
+slice_perf_filename = "output.txt"
+file_handle = open(slice_perf_filename, 'w')
+
 for slice in slices:
     logging.info(f"slice: {slice}")
     precision, recall, fbeta, c_matrix = slice_performance(model, test, slice)
+    slice_perf_results = f"Slice {slice}: \nprecision = {precision:.3f}, \
+recall = {recall:.3f}, fbeta = {fbeta:.3f}\n"
+    cm_results = f"Confusion Matrix =\n {c_matrix}\n"
     logging.info(
                  f"Slice {slice}, "
                  f"precision: {precision:.3f}, "
@@ -171,3 +180,11 @@ for slice in slices:
                  f"fbeta: {fbeta:.3f}"
                 )
     logging.info(f"Confusion Matrix: {c_matrix}")
+    #
+    # Write the slice results.
+    #
+    file_handle.write(slice_perf_results)
+    file_handle.write(cm_results)
+    file_handle.write("\n")
+
+file_handle.close()
